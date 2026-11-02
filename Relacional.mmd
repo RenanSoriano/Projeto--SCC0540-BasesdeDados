@@ -1,0 +1,108 @@
+erDiagram
+    Evento ||--o{ Atividade : "inclui"
+    Atividade ||--o{ Sessao : "realizada em"
+    Espaco ||--o{ Sessao : "sedia"
+    Evento ||--o{ Promocao : "tem promotor"
+    Organizacao |o--o{ Promocao : "promove"
+    Pessoa |o--o{ Promocao : "promove"
+    Evento ||--o{ InscricaoEvento : "tem inscrito"
+    Pessoa ||--o{ InscricaoEvento : "inscreve-se"
+    Evento ||--o{ ParticipacaoEvento : "tem participante"
+    Pessoa ||--o{ ParticipacaoEvento : "participa"
+    Atividade ||--o{ AtuacaoAtividade : "tem atuante"
+    Pessoa ||--o{ AtuacaoAtividade : "atua"
+    Sessao ||--o{ InscricaoSessao : "tem inscrito"
+    Pessoa ||--o{ InscricaoSessao : "inscreve-se"
+    Sessao ||--o{ SessaoHistorico : "gera historico"
+
+    Evento {
+        int id_evento PK "surrogate"
+        varchar nome "UNIQUE(nome,edicao)"
+        smallint edicao "UNIQUE(nome,edicao)"
+        text descricao
+        date data_inicio
+        date data_fim
+    }
+
+    Atividade {
+        int id_atividade PK "surrogate"
+        int id_evento FK "NOT NULL"
+        varchar titulo
+        text descricao
+        varchar tipo "ENUM: palestra|workshop|minicurso|painel|mesa_redonda|outro"
+    }
+
+    Sessao {
+        int id_sessao PK "surrogate"
+        int id_atividade FK "NOT NULL"
+        varchar id_espaco FK "NOT NULL"
+        date data
+        time hora_inicio
+        time hora_fim "CHECK hora_fim > hora_inicio"
+        int vagas_limite "NULL = capacidade do espaco"
+    }
+
+    Espaco {
+        varchar nome PK "natural"
+        varchar tipo "ENUM: sala|auditorio|laboratorio|area_exposicao|outro"
+        int capacidade "CHECK capacidade > 0"
+        boolean projetor "DEFAULT false"
+        boolean computadores "DEFAULT false"
+        boolean audio "DEFAULT false"
+        boolean internet "DEFAULT false"
+    }
+
+    Pessoa {
+        char cpf PK "natural, CHAR(11)"
+        varchar nome "NOT NULL"
+        varchar email "UNIQUE"
+    }
+
+    Organizacao {
+        int id_organizacao PK "surrogate"
+        varchar nome "NOT NULL"
+        varchar tipo "ENUM: universidade|empresa|associacao|outra"
+    }
+
+    Promocao {
+        int id_promocao PK "surrogate"
+        int id_evento FK "NOT NULL"
+        int id_organizacao FK "NULL, CHECK XOR com cpf"
+        char cpf FK "NULL, CHECK XOR com id_organizacao"
+    }
+
+    InscricaoEvento {
+        char cpf PK, FK "natural composta"
+        int id_evento PK, FK "natural composta"
+        timestamp data_inscricao "DEFAULT now"
+        varchar status "ENUM: confirmada|cancelada"
+    }
+
+    InscricaoSessao {
+        char cpf PK, FK "natural composta"
+        int id_sessao PK, FK "natural composta"
+        timestamp data_inscricao "DEFAULT now"
+        varchar status "ENUM: confirmada|lista_espera|cancelada"
+    }
+
+    ParticipacaoEvento {
+        char cpf PK, FK "natural composta"
+        int id_evento PK, FK "natural composta"
+        varchar papel PK "ENUM: ouvinte|organizador"
+    }
+
+    AtuacaoAtividade {
+        char cpf PK, FK "natural composta"
+        int id_atividade PK, FK "natural composta"
+        varchar papel PK "ENUM: palestrante|instrutor|mediador"
+    }
+
+    SessaoHistorico {
+        int id_historico PK "surrogate"
+        int id_sessao FK "NOT NULL"
+        timestamp data_alteracao "DEFAULT now"
+        date data_ant "valor anterior"
+        time hora_inicio_ant "valor anterior"
+        time hora_fim_ant "valor anterior"
+        varchar id_espaco_ant "valor anterior"
+    }
