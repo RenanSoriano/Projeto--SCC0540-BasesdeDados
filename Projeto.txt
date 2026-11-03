@@ -3,7 +3,7 @@ SCC0640 - PROJETO DE BASES DE DADOS
 ============================================================
 GRUPO: [a definir]
 INTEGRANTES: Renan Silva Soriano (11794824); Erik Reis de Oliveira Santos (16864139)
-MODELO UTILIZADO NO OLLAMA: gemma3:4b
+MODELO UTILIZADO NO OLLAMA: gemma3:1b
 ============================================================
 1. DESCRICAO FINAL DO SISTEMA
 ============================================================

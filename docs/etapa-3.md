@@ -21,6 +21,8 @@ FIM DO ARQUIVO.
 - GRUPO: `[a definir]` (pendente — será preenchido antes da entrega final).
 - MODELO UTILIZADO NO OLLAMA: `gemma3:4b` (escolha registrada na conversa: roda com
   folga em notebook com 8GB de RAM; desempenho da IA não é avaliado, apenas a integração).
+  **Nota posterior:** substituído por `gemma3:1b` após medição em teste (ver D29 em
+  `docs/etapa-5.md`) — `gemma3:4b` não cabe na RAM disponível do ambiente de teste.
 
 ## 3. Decisões desta etapa
 
