@@ -90,6 +90,7 @@ def schema_existe(conn):
 def garantir_schema(conn, ddl):
     if schema_existe(conn):
         print("Estruturas do banco já existem.")
+        conn.commit()
         return
     print("Estruturas ausentes. Executando DDL de Projeto.txt...")
     with conn.cursor() as cur:
@@ -103,6 +104,7 @@ def garantir_dados(conn):
         cur.execute("SELECT COUNT(*) FROM pessoa")
         if cur.fetchone()[0] > 0:
             print("Banco já contém dados.")
+            conn.commit()
             return
     dml_path = BASE_DIR.parent / "DML.sql"
     if not dml_path.exists():
@@ -146,10 +148,15 @@ def formatar_tabela(colunas, linhas):
 
 
 def executar_consulta(conn, sql):
-    with conn.cursor() as cur:
-        cur.execute(sql)
-        colunas = [d.name for d in cur.description]
-        linhas = cur.fetchall()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(sql)
+            colunas = [d.name for d in cur.description]
+            linhas = cur.fetchall()
+    except psycopg.Error:
+        conn.rollback()
+        raise
+    conn.commit()
     return colunas, linhas
 
 
