@@ -1,0 +1,83 @@
+============================================================
+SCC0640 - PROJETO DE BASES DE DADOS
+Sistema de Gestao de Eventos e Espacos - INSTRUCOES
+============================================================
+
+1. INTEGRANTES
+------------------------------------------------------------
+Renan Silva Soriano (NUSP 11794824)
+Erik Reis de Oliveira Santos (NUSP 16864139)
+Grupo: XY
+
+2. REQUISITOS DE SOFTWARE
+------------------------------------------------------------
+- PostgreSQL (versao 14 ou superior; testado na versao 18)
+- Python 3.11 ou superior
+- Ollama (https://ollama.com) para execucao local do modelo
+  de linguagem
+
+3. CRIACAO DA BASE
+------------------------------------------------------------
+Opcao manual (fluxo do avaliador):
+  1) criar o banco de dados (ex.: createdb eventos)
+  2) abrir o arquivo Projeto.txt, copiar o conteudo da secao
+     "3. DDL COMPLETO" e executar no PostgreSQL
+
+Opcao automatica:
+  o prototipo (item 5) cria o banco, as estruturas e carrega
+  os dados de demonstracao caso ainda nao existam. Basta
+  executar o prototipo com o config.json apontando para o
+  banco desejado.
+
+4. EXECUCAO DO DML
+------------------------------------------------------------
+Com o banco ja criado e o DDL aplicado, executar:
+
+  psql -d eventos -f DML.sql
+
+O arquivo DML.sql e idempotente (pode ser executado mais de
+uma vez). Ele popula todas as tabelas com dados de
+demonstracao e gera o historico de reprogramacoes de sessoes
+por meio dos triggers.
+
+5. EXECUCAO DO PROTOTIPO
+------------------------------------------------------------
+  cd Prototipo
+  python -m pip install -r requirements.txt
+  python main.py
+
+Antes de executar, ajustar o arquivo config.json se
+necessario (host, porta, banco, usuario, senha do PostgreSQL
+e endereco do Ollama). O avaliador edita apenas o config.json
+para executar. Nao ha caminhos absolutos no codigo.
+
+O menu permite: executar as 5 consultas do projeto (itens 1
+a 5) e fazer perguntas em linguagem natural, convertidas em
+SQL pelo modelo local (item 6).
+
+6. MODELO UTILIZADO NO OLLAMA
+------------------------------------------------------------
+Modelo: gemma3:1b
+
+Para baixar o modelo:
+  ollama pull gemma3:1b
+
+O modelo deve estar em execucao local (padrao:
+http://localhost:11434). A primeira chamada pode demorar
+alguns segundos enquanto o modelo e carregado em memoria.
+
+7. LIMITACOES E FUNCIONALIDADES NAO CONCLUIDAS
+------------------------------------------------------------
+- Interface grafica nao implementada (opcional conforme o
+  enunciado; o prototipo e textual).
+- O modo de pergunta livre usa um modelo pequeno (gemma3:1b);
+  em perguntas complexas o SQL gerado pode ser impreciso e o
+  sistema exibe a mensagem de erro correspondente. Conforme
+  o enunciado, o desempenho da IA nao e avaliado, apenas a
+  integracao software-LLM.
+- Todas as funcionalidades obrigatorias do enunciado foram
+  implementadas.
+
+============================================================
+FIM DO ARQUIVO
+============================================================
