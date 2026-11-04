@@ -102,3 +102,11 @@ extras.
 - `Prototipo/main.py` — aplicação de linha de comando.
 - `Prototipo/config.json` — configuração (formato exato do PDF; modelo `gemma3:1b`).
 - `Prototipo/requirements.txt` — `ollama`, `psycopg[binary]`.
+
+## 7. Melhoria pós-etapa (contribuição do integrante)
+
+Commit `59fdfe6` (Erik): controle de transação do psycopg3 em `main.py` — `commit` após
+consultas bem-sucedidas e `rollback` + re-raise em erro. Corrige o caso em que uma consulta
+com erro deixava a transação abortada e as consultas seguintes do menu falhavam
+(`current transaction is aborted`). Snippets obrigatórios do PDF intactos; regressão validada
+(consulta com erro → consulta seguinte funciona na mesma sessão).
